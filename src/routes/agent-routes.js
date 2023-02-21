@@ -5,7 +5,7 @@ const registerAgentRoutes = (app) => {
     app.get('/agents', AgentController.getAgents)
     app.get('/agents-by-region', AgentController.getAgentsByRegion)
     app.put('/agents-update-info', AgentController.updateAgents)
-    app.post('/agent-delete', AgentController.deleteAgent)
+    app.delete('/agent-delete', AgentController.deleteAgent)
 }
 
 module.exports = { registerAgentRoutes }
