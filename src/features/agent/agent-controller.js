@@ -1,5 +1,13 @@
+const AgentModel = require('../../shared/db/models/agent-model')
+
 const createAgent = async (req, res) => {
-    res.status(201).send('Create agent...')
+    try {
+        const agent = await AgentModel.create(req.body)
+        res.status(201).json({ data: agent })
+    } catch (err) {
+        console.error(err)
+        res.status(500).send({ error: err })
+    }
 }
 
 const getAgents = async (req, res) => {
