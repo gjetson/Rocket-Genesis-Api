@@ -52,7 +52,20 @@ const updateAgents = async (req, res) => {
 }
 
 const deleteAgent = async (req, res) => {
-    res.status(200).send('Delete agent...')
+    try {
+        console.log(req.params.id)
+        const agent = await AgentModel.findByIdAndDelete(req.params.id)
+        console.log("agent: ", agent)
+        if (agent) {
+            res.status(200).json({ data: agent })
+        }
+        else {
+            res.status(404).json({ err: `Data not found for id: ${req.params.id}` })
+        }
+    } catch (err) {
+        console.error(err)
+        res.status(500).send({ error: err })
+    }
 }
 
 module.exports = { createAgent, getAgents, getAgentsByRegion, updateAgents, deleteAgent }
