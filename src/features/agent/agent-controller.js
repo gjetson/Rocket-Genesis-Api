@@ -11,7 +11,13 @@ const createAgent = async (req, res) => {
 }
 
 const getAgents = async (req, res) => {
-    res.status(200).send('Get agents...')
+    try {
+        const agents = await AgentModel.find({}).sort({ last_name: 1 })
+        res.status(201).json({ data: agents })
+    } catch (err) {
+        console.error(err)
+        res.status(500).send({ error: err })
+    }
 }
 
 const getAgentsByRegion = async (req, res) => {
