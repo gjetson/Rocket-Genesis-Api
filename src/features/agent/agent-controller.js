@@ -21,7 +21,13 @@ const getAgents = async (req, res) => {
 }
 
 const getAgentsByRegion = async (req, res) => {
-    res.status(200).send('Get agents by region...')
+    try {
+        const agents = await AgentModel.find({ region: req.query.region }).sort({ rating: 1 })
+        res.status(201).json({ data: agents })
+    } catch (err) {
+        console.error(err)
+        res.status(500).send({ error: err })
+    }
 }
 
 const updateAgents = async (req, res) => {
