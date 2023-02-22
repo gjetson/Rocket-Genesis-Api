@@ -4,7 +4,7 @@ const registerAgentRoutes = (app) => {
     app.post('/agent-create', AgentController.createAgent)
     app.get('/agents', AgentController.getAgents)
     app.get('/agents-by-region', AgentController.getAgentsByRegion)
-    app.put('/agents-update-info', AgentController.updateAgents)
+    app.patch('/agents-update-info/:id', AgentController.updateAgents)
     app.delete('/agent-delete', AgentController.deleteAgent)
 }
 

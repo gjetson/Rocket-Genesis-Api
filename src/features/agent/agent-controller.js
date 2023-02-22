@@ -1,4 +1,5 @@
 const AgentModel = require('../../shared/db/models/agent-model')
+const { filterUpdates } = require('./utils')
 
 const createAgent = async (req, res) => {
     try {
@@ -31,7 +32,23 @@ const getAgentsByRegion = async (req, res) => {
 }
 
 const updateAgents = async (req, res) => {
-    res.status(200).send('Update agents...')
+    try {
+        const allowed = filterUpdates(req.body)
+        console.log(req.params.id)
+        const agent = await AgentModel.findByIdAndUpdate(
+            { _id: req.params.id },
+            allowed,
+            { new: true, upsert: false })
+        if (agent) {
+            res.status(200).json({ data: agent })
+        }
+        else {
+            res.status(404).json({ err: `Data not found for id: ${req.params.id}` })
+        }
+    } catch (err) {
+        console.error(err)
+        res.status(500).send({ error: err })
+    }
 }
 
 const deleteAgent = async (req, res) => {
