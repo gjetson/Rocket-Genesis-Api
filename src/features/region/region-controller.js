@@ -22,8 +22,10 @@ const getRegions = async (req, res) => {
 
 const getAllStars = async (req, res) => {
     try {
-        const getAllStars = await Region.find({ region: req.query.region }).sort({ rating: 1 })
-        res.status(200).json({ data: stars })
+        const region = await Region.find({ region: req.params.region }).populate('top_agents')
+        console.log(region)
+        const stars = region[0].top_agents.sort((a, b) => (a.sales > b.sales) ? -1 : 1)
+        res.status(200).json({ data: stars[0] })
     } catch (err) {
         console.error(err)
         res.status(500).send({ error: err })
