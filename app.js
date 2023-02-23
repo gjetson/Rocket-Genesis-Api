@@ -11,11 +11,13 @@ const port = process.env.PORT || 3004
 // Import routes
 const HealthRoutes = require('./src/routes/health.routes')
 const AgentRoutes = require('./src/routes/agent-routes')
+const RegionRoutes = require('./src/routes/region-routes')
 
 app.use(Express.json())
 
 HealthRoutes.registerHealthRoutes(app)
 AgentRoutes.registerAgentRoutes(app)
+RegionRoutes.registerRegionRoutes(app)
 
 MongoManager.openMongoConnection(process.env.MONGO_URI)
 

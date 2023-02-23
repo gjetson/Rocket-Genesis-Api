@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 
-const AgentSchema = new mongoose.Schema({
+const AgentSchema = mongoose.Schema({
     first_name: {
         type: String,
         trim: true,
@@ -49,5 +49,5 @@ const AgentSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
-const AgentModel = mongoose.model('Agent', AgentSchema)
-module.exports = AgentModel
+const Agent = mongoose.model('Agent', AgentSchema)
+module.exports = Agent

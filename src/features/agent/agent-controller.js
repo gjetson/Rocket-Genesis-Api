@@ -1,9 +1,9 @@
-const AgentModel = require('../../shared/db/models/agent-model')
+const Agent = require('../../shared/db/models/agent-model')
 const { filterUpdates } = require('./utils')
 
 const createAgent = async (req, res) => {
     try {
-        const agent = await AgentModel.create(req.body)
+        const agent = await Agent.create(req.body)
         res.status(201).json({ data: agent })
     } catch (err) {
         console.error(err)
@@ -13,8 +13,8 @@ const createAgent = async (req, res) => {
 
 const getAgents = async (req, res) => {
     try {
-        const agents = await AgentModel.find({}).sort({ last_name: 1 })
-        res.status(201).json({ data: agents })
+        const agents = await Agent.find({}).sort({ last_name: 1 })
+        res.status(200).json({ data: agents })
     } catch (err) {
         console.error(err)
         res.status(500).send({ error: err })
@@ -23,8 +23,8 @@ const getAgents = async (req, res) => {
 
 const getAgentsByRegion = async (req, res) => {
     try {
-        const agents = await AgentModel.find({ region: req.query.region }).sort({ rating: 1 })
-        res.status(201).json({ data: agents })
+        const agents = await Agent.find({ region: req.query.region }).sort({ rating: 1 })
+        res.status(200).json({ data: agents })
     } catch (err) {
         console.error(err)
         res.status(500).send({ error: err })
@@ -33,11 +33,11 @@ const getAgentsByRegion = async (req, res) => {
 
 const updateAgents = async (req, res) => {
     try {
-        const allowed = filterUpdates(req.body)
+        const filtered = filterUpdates(req.body)
         console.log(req.params.id)
-        const agent = await AgentModel.findByIdAndUpdate(
+        const agent = await Agent.findByIdAndUpdate(
             { _id: req.params.id },
-            allowed,
+            filtered,
             { new: true, upsert: false })
         if (agent) {
             res.status(200).json({ data: agent })
@@ -54,7 +54,7 @@ const updateAgents = async (req, res) => {
 const deleteAgent = async (req, res) => {
     try {
         console.log(req.params.id)
-        const agent = await AgentModel.findByIdAndDelete(req.params.id)
+        const agent = await Agent.findByIdAndDelete(req.params.id)
         console.log("agent: ", agent)
         if (agent) {
             res.status(200).json({ data: agent })
