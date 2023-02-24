@@ -1,7 +1,10 @@
 const Region = require('../../shared/db/models/region-model')
+const { getTotalSales } = require('../agent/utils')
 
 const createRegion = async (req, res) => {
     try {
+        const total = await getTotalSales(req.body.region)
+        req.body.total_sales = total[0].sum
         const region = await Region.create(req.body)
         res.status(201).json({ data: region })
     } catch (err) {
