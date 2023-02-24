@@ -7,7 +7,8 @@ const RegionSchema = mongoose.Schema({
             values: ['north', 'south', 'east', 'west'],
             msg: 'value must be north, south, east or west'
         },
-        required: true
+        required: true,
+        unique: true
     },
     address: {
         type: String,
