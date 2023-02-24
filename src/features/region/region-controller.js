@@ -30,10 +30,17 @@ const getRegions = async (req, res) => {
 
 const getAllStars = async (req, res) => {
     try {
-        const region = await Region.find({ region: req.params.region }).populate('top_agents')
-        console.log(region)
-        const stars = region[0].top_agents.sort((a, b) => (a.sales > b.sales) ? -1 : 1)
-        res.status(200).json({ data: stars[0] })
+        const regions = await Region.find({}).populate('top_agents')
+        console.log(regions)
+        let stars = []
+        regions.forEach((e) => {
+            const obj = {
+                region: e.region,
+                top_agents: e.top_agents.sort((a, b) => (a.sales > b.sales) ? -1 : 1)[0]
+            }
+            stars.push(obj)
+        })
+        res.status(200).json(stars)
     } catch (err) {
         console.error(err)
         res.status(500).send({ error: err })
@@ -45,18 +52,17 @@ const getAllStars = async (req, res) => {
 //         const match = [
 //             {
 //                 $lookup: {
-//                     from: 'authors',
-//                     localField: 'author',
+//                     from: 'agents',
+//                     localField: 'top_agents',
 //                     foreignField: '_id',
-//                     as: 'bookAuthor'
+//                     as: 'topAgents'
 //                 }
 //             },
-//             { $match: { bookAuthor: { $not: { $size: 0 } } } },
-//             { $unwind: '$bookAuthor' },
+//             { $unwind: '$topAgents' },
 //             {
 //                 $project: {
-//                     name: 1,
-//                     bookAuthor: { name: 1 }
+//                     region: 1,
+//                     topAgents: { sales: $max }
 //                 }
 //             }
 //         ]
