@@ -11,7 +11,11 @@ const createRegion = async (req, res) => {
         // console.log('top_agent_ids: ', top_agent_ids)
         req.body.top_agents = top_agent_ids
         const total = await getTotalSales(req.body.region)
-        req.body.total_sales = total[0].sum
+        if (total.length > 0) {
+            req.body.total_sales = total[0].sum
+        } else {
+            req.body.total_sales = 0
+        }
         const region = await Region.create(req.body)
         res.status(201).json({ data: region })
     } catch (err) {
@@ -19,7 +23,7 @@ const createRegion = async (req, res) => {
             const msg = `Duplicate key error. You cannot have two documents where region = '${err.keyValue.region}'.`
             res.status(500).send({ error: msg })
         } else {
-            console.error(err.keyValue)
+            console.error(err)
             res.status(500).send(err)
         }
     }

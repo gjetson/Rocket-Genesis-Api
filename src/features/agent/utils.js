@@ -28,7 +28,7 @@ const getTotalSales = async (region) => {
             { $group: { _id: "$region", sum: { $sum: "$sales" } } }
         ]
         const sum = await Agent.aggregate(match)
-        console.log('sum: ', sum)
+        // console.log('sum: ', sum)
         return sum
     } catch (err) {
         console.error(err)

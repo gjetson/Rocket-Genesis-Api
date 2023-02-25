@@ -3,9 +3,9 @@ const winston = require('winston') // for transports.Console
 
 const initLogger = (app, env) => {
     if (env.LOG === '0') {
-        console.log('winston log disabled...')
+        console.log('winston log disabled.')
     } else {
-        console.log('winston log enabled...')
+        console.log('winston log enabled.')
         app.use(expressWinston.logger({
             transports: [
                 new winston.transports.Console({
