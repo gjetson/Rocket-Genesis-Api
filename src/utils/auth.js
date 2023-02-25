@@ -1,11 +1,27 @@
-const isAuth = (req, res, next) => {
-    const auth = req.headers.authorization
-    if (auth === 'rocket') {
-        next()
+let active = true
+
+const setActive = (env) => {
+    if (env.AUTH === '0') {
+        console.log('Basic authorization disabled.')
+        active = false
     } else {
-        res.status(401)
-        res.send('Access forbidden')
+        console.log('Basic authorization enabled.')
+        active = true
     }
 }
 
-module.exports = { isAuth }
+const isAuth = (req, res, next) => {
+    if (active) {
+        const auth = req.headers.authorization
+        if (auth === 'rocket') {
+            next()
+        } else {
+            res.status(401)
+            res.send('Access forbidden')
+        }
+    } else {
+        next()
+    }
+}
+
+module.exports = { isAuth, setActive }

@@ -1,7 +1,5 @@
 // Initial dependencies and definitions
 const Express = require('express')
-const expressWinston = require('express-winston')
-const winston = require('winston') // for transports.Console
 const MongoManager = require('./src/shared/db/mongodb/mongo-manager')
 
 require('dotenv').config()
@@ -15,19 +13,13 @@ const HealthRoutes = require('./src/routes/health.routes')
 const AgentRoutes = require('./src/routes/agent-routes')
 const RegionRoutes = require('./src/routes/region-routes')
 
+const { setActive } = require('./src/utils/auth')
+setActive(process.env)
+
 app.use(Express.json())
 
-if (process.env.LOG === '1') {
-    console.log('winston log enabled...')
-    app.use(expressWinston.logger({
-        transports: [
-            new winston.transports.Console({
-                json: true,
-                colorize: true
-            })
-        ]
-    }))
-}
+const { initLogger } = require('./src/utils/logger')
+initLogger(app, process.env)
 
 HealthRoutes.registerHealthRoutes(app)
 AgentRoutes.registerAgentRoutes(app)
