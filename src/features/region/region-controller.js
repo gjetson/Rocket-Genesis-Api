@@ -1,21 +1,10 @@
 const Region = require('../../shared/db/models/region-model')
-const { getTotalSales, getTopAgents } = require('../agent/utils')
+const { getTotalSales, getTopAgentIds } = require('../agent/utils')
 
 const createRegion = async (req, res) => {
     try {
-        const top_agents = await getTopAgents(req.body.region)
-        let top_agent_ids = []
-        top_agents.forEach(e => {
-            top_agent_ids.push(e._id)
-        })
-        // console.log('top_agent_ids: ', top_agent_ids)
-        req.body.top_agents = top_agent_ids
-        const total = await getTotalSales(req.body.region)
-        if (total.length > 0) {
-            req.body.total_sales = total[0].sum
-        } else {
-            req.body.total_sales = 0
-        }
+        req.body.top_agents = await getTopAgentIds(req.body.region)
+        req.body.total_sales = await getTotalSales(req.body.region)
         const region = await Region.create(req.body)
         res.status(201).json({ data: region })
     } catch (err) {

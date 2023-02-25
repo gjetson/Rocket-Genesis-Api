@@ -27,9 +27,12 @@ const getTotalSales = async (region) => {
             { $match: { region: region } },
             { $group: { _id: "$region", sum: { $sum: "$sales" } } }
         ]
-        const sum = await Agent.aggregate(match)
+        const total = await Agent.aggregate(match)
         // console.log('sum: ', sum)
-        return sum
+        if (total.length > 0) {
+            return total[0].sum
+        }
+        return 0
     } catch (err) {
         console.error(err)
     }
@@ -45,5 +48,18 @@ const getTopAgents = async (region) => {
     }
 }
 
+const getTopAgentIds = async (region) => {
+    try {
+        const top_agents = await getTopAgents(region)
+        let top_agent_ids = []
+        top_agents.forEach(e => {
+            top_agent_ids.push(e._id)
+        })
+        return top_agent_ids
+    } catch (err) {
+        console.error(err)
+    }
+}
 
-module.exports = { filterUpdates, getTotalSales, getTopAgents }
+
+module.exports = { filterUpdates, getTotalSales, getTopAgents, getTopAgentIds }
