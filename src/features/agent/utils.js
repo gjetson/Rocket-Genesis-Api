@@ -35,5 +35,15 @@ const getTotalSales = async (region) => {
     }
 }
 
+const getTopAgents = async (region) => {
+    try {
+        const top_agents = await Agent.find({ region: region }).sort({ sales: -1 }).limit(3)
+        console.log('agents: ', top_agents)
+        return top_agents
+    } catch (err) {
+        console.error(err)
+    }
+}
 
-module.exports = { filterUpdates, getTotalSales }
+
+module.exports = { filterUpdates, getTotalSales, getTopAgents }
