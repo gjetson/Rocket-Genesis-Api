@@ -43,7 +43,7 @@ const updateAgents = async (req, res) => {
             res.status(200).json({ data: agent })
         }
         else {
-            res.status(404).json({ err: `Data not found for id: ${req.params.id}` })
+            res.status(404).json({ err: `Agent not found for id: ${req.params.id}` })
         }
     } catch (err) {
         console.error(err)
@@ -53,18 +53,22 @@ const updateAgents = async (req, res) => {
 
 const deleteAgent = async (req, res) => {
     try {
-        console.log(req.params.id)
+        // console.log(req.params.id)
         const agent = await Agent.findByIdAndDelete(req.params.id)
-        console.log("agent: ", agent)
+        // console.log("agent: ", agent)
         if (agent) {
             res.status(200).json({ data: agent })
         }
         else {
-            res.status(404).json({ err: `Data not found for id: ${req.params.id}` })
+            res.status(404).json({ err: `Agent not found for id: ${req.params.id}` })
         }
     } catch (err) {
-        console.error(err)
-        res.status(500).send({ error: err })
+        if (err.kind === 'ObjectId' && err.name === 'CastError') {
+            const msg = `'${req.params.id}' is not an ID. It must be a string of 12 bytes or 24 hex characters or an integer.`
+            res.status(500).send({ error: msg })
+        } else {
+            res.status(500).send({ error: err })
+        }
     }
 }
 
