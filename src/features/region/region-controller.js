@@ -20,7 +20,7 @@ const createRegion = async (req, res) => {
 
 const getRegions = async (req, res) => {
     try {
-        const regions = await Region.find({}).populate('top_agents').populate('manager')
+        const regions = await Region.find({ region: req.params.region }).populate('top_agents').populate('manager')
         res.status(200).json({ data: regions })
     } catch (err) {
         console.error(err)
@@ -31,7 +31,7 @@ const getRegions = async (req, res) => {
 const getAllStars = async (req, res) => {
     try {
         const regions = await Region.find({}).populate('top_agents')
-        console.log(regions)
+        // console.log(regions)
         let stars = []
         regions.forEach((e) => {
             const obj = {
